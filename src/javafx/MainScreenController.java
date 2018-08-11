@@ -108,12 +108,21 @@ public class MainScreenController implements Initializable, IBlutoothInfoScreen 
 
     public void futureAppsBtnAction(ActionEvent event) {
         System.out.println("future");
-        loadScreen("/javafx/fxml/FutureAppsScreen.fxml", event);
+        loadScreen("/javafx/fxml/OtherApps.fxml", event);
 
 
     }
 
-    private void loadScreen(String fxml, Event event) {
+    public void reactionTestWithFruFruBtnAction(ActionEvent event) {
+        loadScreen("/javafx/fxml/ReactionTestWithFruFru.fxml", event);
+
+
+    }
+    public void reactionTestBtnAction(ActionEvent event) {
+        loadScreen("/javafx/fxml/ReactionTest.fxml", event);
+    }
+
+    public void loadScreen(String fxml, Event event) {
         if (((JFXButton) event.getSource()).getStyleClass().contains("selected")) {
             System.out.println("Screen already Selected");
             return;
@@ -198,4 +207,7 @@ public class MainScreenController implements Initializable, IBlutoothInfoScreen 
 
 
     }
+
+
+
 }

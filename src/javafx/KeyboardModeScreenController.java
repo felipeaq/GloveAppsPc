@@ -11,7 +11,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
-import swing.Keyboard;
+
 import uncoupledglovedatathings.IPredictScreen;
 import uncoupledprograms.SVC;
 
@@ -21,7 +21,7 @@ import javax.speech.EngineException;
 import javax.speech.EngineStateError;
 import javax.speech.synthesis.Synthesizer;
 import javax.speech.synthesis.SynthesizerModeDesc;
-import javax.swing.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
