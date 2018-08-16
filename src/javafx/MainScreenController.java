@@ -113,12 +113,14 @@ public class MainScreenController implements Initializable, IBlutoothInfoScreen 
 
     }
 
-    public void reactionTestWithFruFruBtnAction(ActionEvent event) {
-        loadScreen("/javafx/fxml/ReactionTestWithFruFru.fxml", event);
-
-
+    public void pathBtnAction(ActionEvent event){
+        System.out.println("path");
+        loadScreen("/javafx/fxml/FollowThePathScreen.fxml", event);
     }
+
     public void reactionTestBtnAction(ActionEvent event) {
+
+        System.out.println("reaction");
         loadScreen("/javafx/fxml/ReactionTest.fxml", event);
     }
 

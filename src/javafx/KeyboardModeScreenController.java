@@ -11,7 +11,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
-
 import uncoupledglovedatathings.IPredictScreen;
 import uncoupledprograms.SVC;
 

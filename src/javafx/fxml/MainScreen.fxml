@@ -87,6 +87,11 @@
                         <Insets bottom="20.0" top="20.0" />
                      </padding>
                   </JFXButton>
+                  <JFXButton layoutX="10.0" layoutY="234.0" mnemonicParsing="false" onAction="#pathBtnAction" prefHeight="30.0" prefWidth="500.0" styleClass="normal-menu-button" text="Follow the Path">
+                     <padding>
+                        <Insets bottom="20.0" top="20.0" />
+                     </padding>
+                  </JFXButton>
                   <JFXButton mnemonicParsing="false" onAction="#futureAppsBtnAction" prefHeight="30.0" prefWidth="500.0" styleClass="normal-menu-button" text="Future Applications">
                      <padding>
                         <Insets bottom="20.0" top="20.0" />
