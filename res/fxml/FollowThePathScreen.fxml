@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="570.0" prefWidth="800.0" style="-fx-background-color: #dcdcdc;" stylesheets="@css/css.css" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.FollowThePathScreenController">
+    <children>
+      <AnchorPane fx:id="rootAP" style="-fx-background-color: #aaa;" VBox.vgrow="ALWAYS">
+         <children>
+            <Circle fx:id="theBall" fill="DODGERBLUE" layoutX="160.0" layoutY="400.0" radius="5.0" stroke="BLACK" strokeType="INSIDE" />
+            <Rectangle fx:id="goalSquare" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="31.0" stroke="BLACK" strokeType="INSIDE" width="34.0" x="592.0" y="390.0" />
+         </children>
+      </AnchorPane>
+        <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefWidth="1000.0" VBox.vgrow="NEVER">
+           <children>
+               <JFXButton mnemonicParsing="false" onAction="#start" prefHeight="54.0" prefWidth="150.0" styleClass="keyboard-left-buttons" text="Start">
+                   <font>
+                       <Font size="20.0" />
+                   </font>
+                   <HBox.margin>
+                       <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                   </HBox.margin>
+               </JFXButton>
+               <JFXButton layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#stop" prefHeight="54.0" prefWidth="150.0" styleClass="keyboard-left-buttons" text="Stop">
+                   <font>
+                       <Font size="20.0" />
+                   </font>
+                   <HBox.margin>
+                       <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                   </HBox.margin>
+               </JFXButton>
+           </children>
+        </HBox>
+    </children>
+</VBox>

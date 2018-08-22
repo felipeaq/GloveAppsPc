@@ -52,6 +52,8 @@ public class GloveSensors {
         getSensor1().getAy().add(sensor1AY / RESIST);
         getSensor1().getAz().add(sensor1AZ / RESIST);
 
+
+        System.out.println(sensor2GX);
         getSensor2().getGx().add(sensor2GX / TO_RAD);
         getSensor2().getGy().add(sensor2GY / TO_RAD);
         getSensor2().getGz().add(sensor2GZ / TO_RAD);
@@ -73,6 +75,7 @@ public class GloveSensors {
         getSensor4().getAy().add(sensor4AY / RESIST);
         getSensor4().getAz().add(sensor4AZ / RESIST);
 
+        System.out.println(sensor5GX);
         getSensor5().getGx().add(sensor5GX / TO_RAD);
         getSensor5().getGy().add(sensor5GY / TO_RAD);
         getSensor5().getGz().add(sensor5GZ / TO_RAD);

@@ -25,17 +25,19 @@ public class BluetoothConnection {
     private OutputStream os = null;
     private InputStream is = null;
     private boolean isConnected = false;
+    private boolean hasError = false;
     private static BluetoothConnection ME;
     private IBlutoothInfoScreen blutoothInfoScreen;
 
-    public static class BluetoothStatus{
+    public static class BluetoothStatus {
         private BluetoothConnection b;
-        private BluetoothStatus(BluetoothConnection b){
-            this.b=b;
+
+        private BluetoothStatus(BluetoothConnection b) {
+            this.b = b;
         }
 
-        public boolean isConnected(){
-            if(b==null)
+        public boolean isConnected() {
+            if (b == null)
                 return false;
             return b.isConnected();
         }
@@ -46,7 +48,7 @@ public class BluetoothConnection {
     }
 
 
-    public static BluetoothStatus getBluetoothStatus(){
+    public static BluetoothStatus getBluetoothStatus() {
         return new BluetoothStatus(ME);
     }
 
@@ -63,7 +65,7 @@ public class BluetoothConnection {
         return isConnected;
     }
 
-    public void tryToConnect() {
+    public void tryToConnect(String gloveName) {
         if (isConnected)
             return;
         Thread t = new Thread(() -> {
@@ -76,7 +78,7 @@ public class BluetoothConnection {
                         try {
                             String name = btDevice.getFriendlyName(false);
                             System.out.format("%s (%s)\n", name, btDevice.getBluetoothAddress());
-                            if (name.equals("LUVAMOUSE")) {
+                            if (name.equals(gloveName)) {
                                 hc05device = btDevice;
                                 System.out.println("got it!");
                             }
@@ -147,22 +149,34 @@ public class BluetoothConnection {
                 is = streamConnection.openInputStream();
 
                 os.write("U".getBytes());
-                blutoothInfoScreen.bluetoothConnected();
                 isConnected = true;
+                boolean shownConnected = false;
                 while (isConnected) {
                     sync();
+                    if (hasError) {
+                        break;
+                    } else if (!shownConnected) {
+                        blutoothInfoScreen.bluetoothConnected();
+                        shownConnected = true;
+                    }
                     appendSensors();
                 }
 
                 os.close();
                 is.close();
-                blutoothInfoScreen.bluetoothDisconnected();
+                if (hasError) {
+                    blutoothInfoScreen.connectionFailure();
+                    hasError = false;
+                    System.out.println("BT connection closed by error");
+                } else {
+                    blutoothInfoScreen.bluetoothDisconnected();
+                    System.out.println("BT connection closed");
+                }
                 streamConnection.close();
-                System.out.println("closed");
 
 
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                e.printStackTrace();
                 blutoothInfoScreen.connectionFailure();
             }
         });
@@ -171,13 +185,19 @@ public class BluetoothConnection {
     }
 
     public void disconnect() {
-
         isConnected = false;
     }
 
-    void sync() {
+    public void disconnectWithError() {
+        isConnected = false;
+        hasError = true;
+    }
+
+
+    private void sync() {
         int cod1, cod2, cod3, cod4;
         boolean continua = false;
+        int errorCount = 0;
 
         while (!continua) {
             try {
@@ -190,20 +210,35 @@ public class BluetoothConnection {
                             cod4 = is.read();
                             if (cod4 == 255) {  // 255
                                 continua = true;
-
+                                errorCount = 0;
+                            } else {
+                                errorCount++;
                             }
+                        } else {
+                            errorCount++;
+
                         }
+                    } else {
+                        errorCount++;
                     }
+                } else {
+                    errorCount++;
                 }
             } catch (IOException ex) {
-                System.out.println("Sync error");
+                errorCount++;
+                System.out.println("Sync hasError");
                 continue;
-
+            }
+            if (errorCount > 0)
+                System.out.println(errorCount);
+            if (errorCount > 100000) {
+                continua = true;
+                disconnectWithError();
             }
         }
     }
 
-    void appendSensors() {
+    private void appendSensors() {
         GloveSensors.getInstance().appendDataWithToRadAndResist(
                 readNextValue(),
                 readNextValue(),
@@ -243,7 +278,7 @@ public class BluetoothConnection {
                 readNextValue());
     }
 
-    public double readNextValue() {
+    private double readNextValue() {
         try {
             byte[] buffer_low = new byte[1];
             byte[] buffer_high = new byte[1];

@@ -10,11 +10,11 @@ import javafx.stage.StageStyle;
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/javafx/fxml/MainScreen.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/MainScreen.fxml"));
 
         Scene scene = new Scene(root);
 
-        String css = getClass().getResource("/javafx/fxml/css/css.css").toExternalForm();
+        String css = getClass().getResource("/fxml/css/css.css").toExternalForm();
 
         scene.getStylesheets().addAll(css);
         primaryStage.initStyle(StageStyle.UNDECORATED);
