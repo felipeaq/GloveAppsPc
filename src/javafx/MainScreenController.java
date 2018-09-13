@@ -115,7 +115,7 @@ public class MainScreenController implements Initializable, IBlutoothInfoScreen 
 
     public void pathBtnAction(ActionEvent event) {
         System.out.println("path");
-        loadScreen("fxml/FollowThePathScreen.fxml", event);
+        loadScreen("fxml/FollowThePath2Screen.fxml", event);
     }
 
     public void reactionTestBtnAction(ActionEvent event) {

@@ -48,12 +48,6 @@ public class PathObjectMoveFunction {
                     int maxX = containerW;
                     int maxY = containerH;
 
-
-                    boolean parado = false;
-                    boolean clique = false;
-                    boolean release = false;
-                    boolean released = false;
-                    boolean cliqued = false;
                     double resto_pointerx = 0;
                     double resto_pointerX = 0;
                     double resto_pointerY = 0;
@@ -196,17 +190,11 @@ public class PathObjectMoveFunction {
                             }
                         }
 
-
-
-
                         if (x != x_anterior || y != y_anterior) {
                             pathScreen.moveObject(x, y);
                         }
-
-
                         x_anterior = x;
                         y_anterior = y;
-
 
                         try {
                             Thread.sleep(20);
