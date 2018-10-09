@@ -2,46 +2,37 @@ package javafx;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
-import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import javax.swing.*;
 import java.awt.*;
-import java.util.Objects;
-import java.util.Stack;
 
 /**
  * @web http://java-buddy.blogspot.com/
  */
-public class DrawOnCanvas extends Application {
+@SuppressWarnings("Duplicates")
+public class PathScene  {
     String updown = "";
     volatile boolean pressed = false;
     volatile boolean ended = false;
+    Circle c = new Circle(5);
 
-    @Override
-    public void start(Stage primaryStage) throws InterruptedException {
+    public void start() {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        //Canvas canvas = new Canvas(gd.getDisplayMode().getWidth(), gd.getDisplayMode().getHeight());
-        //   Canvas canvas = new Canvas(5000, gd.getDisplayMode().getHeight());
         Canvas canvas = new Canvas(5000, 768);
 
         final GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
         initDraw(graphicsContext);
-        Circle c = new Circle(5);
         c.setFill(Color.BLUE);
 
         AnchorPane root = new AnchorPane();
@@ -53,6 +44,7 @@ public class DrawOnCanvas extends Application {
         root.getChildren().add(canvas);
         canvas.toFront();
         System.out.println();
+        Stage primaryStage=new Stage();
         Scene scene = new Scene(root, 1366, 768);
         primaryStage.setFullScreen(true);
         primaryStage.initStyle(StageStyle.UNDECORATED);
@@ -66,69 +58,6 @@ public class DrawOnCanvas extends Application {
 
 
 
-        /*
-        funções dos botoes
-         */
-        scene.setOnKeyPressed(event -> {
-            pressed = true;
-            if (event.getCode() == KeyCode.UP) {
-                updown = "UP";
-            } else if (event.getCode() == KeyCode.DOWN) {
-                updown = "DOWN";
-            }
-        });
-        scene.setOnKeyReleased(event -> {
-            pressed = false;
-            if (event.getCode() == KeyCode.UP) {
-                updown = "NONE";
-            } else if (event.getCode() == KeyCode.DOWN) {
-                updown = "NONE";
-            }
-        });
-
-/*
-    Thread do teclado
-*/
-/*
-        new Thread(() -> {
-            while (!ended) {
-                while (pressed) {
-
-                    if (updown.equals("UP")) {
-                        Platform.runLater(() -> {
-                            int y = (int) c.getLayoutY() - 1;
-
-                            if (y - c.getRadius() < c.getRadius() + 3)
-                                y = (int) c.getRadius() + 3;
-
-                            if (y + c.getRadius() >= 755)
-                                y = (int) (755 - c.getRadius());
-
-                            c.setLayoutY(y);
-                        });
-                    } else if (updown.equals("DOWN")) {
-                        Platform.runLater(() -> {
-                            int y = (int) c.getLayoutY() + 1;
-
-                            if (y - c.getRadius() < c.getRadius() + 3)
-                                y = (int) c.getRadius() + 8;
-
-                            if (y + c.getRadius() >= 755)
-                                y = (int) (755 - c.getRadius());
-
-                            c.setLayoutY(y);
-                        });
-                    }
-                    try {
-                        Thread.sleep(3);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
-
-        */
         new Thread(() -> {
 //            try {
 //                Thread.sleep(10000);
@@ -150,14 +79,26 @@ public class DrawOnCanvas extends Application {
                     e.printStackTrace();
                 }
             }
+            JOptionPane.showMessageDialog(null, "acabou");
         }).start();
 
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+    public void moveObject(int y) {
 
+
+        System.out.println("y:"+ y);
+        if (y - c.getRadius() < c.getRadius())
+            y = (int) c.getRadius();
+
+        if (y + c.getRadius() >= 755)
+            y = (int) (755 - c.getRadius());
+
+
+        c.setLayoutY(y);
+
+
+    }
     private void initDraw(GraphicsContext gc) {
         double canvasWidth = gc.getCanvas().getWidth();
         double canvasHeight = gc.getCanvas().getHeight();

@@ -141,4 +141,9 @@ public class FollowThePathScreenController implements Initializable, IPathScreen
 
 
     }
+
+    @Override
+    public void moveObject(int y) {
+
+    }
 }

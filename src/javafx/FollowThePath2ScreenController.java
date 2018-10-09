@@ -1,11 +1,15 @@
 package javafx;
 
+import bluetooth.BluetoothConnection;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -17,75 +21,20 @@ import uncoupledprograms.pconly.PathObjectMoveFunction;
 import uncoupledprograms.pconly.PathVBox;
 
 import javax.swing.*;
+import java.awt.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 
 public class FollowThePath2ScreenController implements Initializable, IPathScreen {
     @FXML
-    private Circle theBall;
-    @FXML
-    private Rectangle goalSquare;
-    @FXML
     private AnchorPane rootAP;
 
+    Circle c = new Circle(5);
 
-
-
-    private void initDraw(GraphicsContext gc){
-        double canvasWidth = gc.getCanvas().getWidth();
-        double canvasHeight = gc.getCanvas().getHeight();
-
-        gc.setFill(Color.RED);
-        gc.setStroke(Color.BLACK);
-        gc.setLineWidth(5);
-
-        gc.fill();
-        gc.strokeRect(
-                0,              //x of the upper left corner
-                0,              //y of the upper left corner
-                canvasWidth,    //width of the rectangle
-                canvasHeight);  //height of the rectangle
-
-        gc.setFill(Color.RED);
-        gc.setStroke(Color.BLUE);
-        gc.setLineWidth(1);
-
-    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Canvas canvas = new Canvas(5000, 500);
-
-        final GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
-        initDraw(graphicsContext);
-
-        canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
-                event -> {
-                    graphicsContext.beginPath();
-                    graphicsContext.moveTo(event.getX(), event.getY());
-                    graphicsContext.stroke();
-                });
-
-        canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
-                event -> {
-                    graphicsContext.lineTo(event.getX(), event.getY());
-                    graphicsContext.stroke();
-                    canvas.setLayoutX(canvas.getLayoutX()-1);
-                });
-
-        canvas.addEventHandler(MouseEvent.MOUSE_RELEASED,
-                event -> {
-
-                });
-
-        rootAP.getChildren().add(canvas);
-
-        goalSquare.toFront();
-        theBall.toFront();
-
-
-    }
 
 /*
 
@@ -96,12 +45,20 @@ public class FollowThePath2ScreenController implements Initializable, IPathScree
 
 
 * */
+    }
+
+    PathScene pathScene = new PathScene();
 
     @FXML
     public void start(ActionEvent event) {
-        PathObjectMoveFunction.getInstance().start(this, 800, 510);
-    }
+        if (BluetoothConnection.getBluetoothStatus().isConnected()) {
+            PathObjectMoveFunction.getInstance().start(this, 800, 510);
+            pathScene.start();
+        }else{
+            showBluetoothDisconnectedAlert();
+        }
 
+    }
     @FXML
     public void stop(ActionEvent event) {
         PathObjectMoveFunction.getInstance().stop();
@@ -117,28 +74,14 @@ public class FollowThePath2ScreenController implements Initializable, IPathScree
         closeConfirmation.show();
     }
 
+
     @Override
     public void moveObject(int x, int y) {
-        if (x - theBall.getRadius() < theBall.getRadius())
-            x = (int) theBall.getRadius();
+    }
 
-        if (y - theBall.getRadius() < theBall.getRadius())
-            y = (int) theBall.getRadius();
-
-        if (x + theBall.getRadius() >= 800)
-            x = (int) (800 - theBall.getRadius());
-        if (y + theBall.getRadius() >= 510)
-            y = (int) (510 - theBall.getRadius());
-
-
-        theBall.setLayoutX(x);
-        theBall.setLayoutY(y);
-
-
-
-        if(theBall.getBoundsInParent().intersects(goalSquare.getBoundsInParent())){
-            JOptionPane.showMessageDialog(null,"DONE");
-        }
+    @Override
+    public void moveObject(int y) {
+        pathScene.moveObject(y);
 
 
     }
