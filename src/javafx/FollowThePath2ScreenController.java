@@ -26,7 +26,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 
-public class FollowThePath2ScreenController implements Initializable, IPathScreen {
+public class FollowThePath2ScreenController implements Initializable, IPathScreen,PathSceneCaller {
     @FXML
     private AnchorPane rootAP;
 
@@ -36,15 +36,6 @@ public class FollowThePath2ScreenController implements Initializable, IPathScree
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-/*
-
-            <AnchorPane fx:id="l" layoutX="121.0" layoutY="157.0" prefHeight="276.0" prefWidth="75.0" style="-fx-background-color: black;" />
-            <AnchorPane fx:id="r" layoutX="571.0" layoutY="157.0" prefHeight="276.0" prefWidth="75.0" style="-fx-background-color: black;" />
-            <AnchorPane fx:id="t" layoutX="121.0" layoutY="82.0" prefHeight="75.0" prefWidth="525.0" style="-fx-background-color: black;" />
-
-
-
-* */
     }
 
     PathScene pathScene = new PathScene();
@@ -53,7 +44,7 @@ public class FollowThePath2ScreenController implements Initializable, IPathScree
     public void start(ActionEvent event) {
         if (BluetoothConnection.getBluetoothStatus().isConnected()) {
             PathObjectMoveFunction.getInstance().start(this, 800, 510);
-            pathScene.start();
+            pathScene.start(this);
         }else{
             showBluetoothDisconnectedAlert();
         }

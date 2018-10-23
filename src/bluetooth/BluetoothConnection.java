@@ -76,11 +76,12 @@ public class BluetoothConnection {
                     @Override
                     public void deviceDiscovered(RemoteDevice btDevice, DeviceClass cod) {
                         try {
-                            String name = btDevice.getFriendlyName(false);
+                              String name = btDevice.getFriendlyName(false);
                             System.out.format("%s (%s)\n", name, btDevice.getBluetoothAddress());
                             if (name.equals(gloveName)) {
                                 hc05device = btDevice;
                                 System.out.println("got it!");
+                                LocalDevice.getLocalDevice().getDiscoveryAgent().cancelInquiry(this);
                             }
                         } catch (IOException e) {
                             e.printStackTrace();

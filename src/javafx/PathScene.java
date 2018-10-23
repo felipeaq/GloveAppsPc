@@ -1,104 +1,222 @@
 package javafx;
 
-import javafx.application.Application;
+import javafx.animation.FadeTransition;
 import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
+import uncoupledprograms.pconly.PathObjectMoveFunction;
 
-import javax.swing.*;
 import java.awt.*;
+
+import javafx.scene.control.Label;
+
+import javax.imageio.ImageIO;
+import java.io.IOException;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @web http://java-buddy.blogspot.com/
  */
 @SuppressWarnings("Duplicates")
-public class PathScene  {
-    String updown = "";
-    volatile boolean pressed = false;
-    volatile boolean ended = false;
-    Circle c = new Circle(5);
+public class PathScene {
+    private volatile boolean locked = true;
+    private Circle fingerCircle = new Circle(5);
+    private Canvas canvas;
+    private ImageView im;
+    private boolean isRunning = false;
+    private PathSceneCaller caller;
+    private Stage stage;
 
-    public void start() {
+
+    public void start(PathSceneCaller caller) {
+        if (isRunning)
+            return;
+        isRunning = true;
+        this.caller = caller;
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        Canvas canvas = new Canvas(5000, 768);
+
+        im = new ImageView("images/noTitle2.png");
+        AnchorPane root = new AnchorPane();
+        root.getChildren().add(im);
+
+        canvas = new Canvas(im.getImage().getWidth(), im.getImage().getHeight());
+        root.getChildren().add(canvas);
+
+        im.setLayoutX(1000);
+        canvas.setLayoutX(1000);
+        canvas.toFront();
+
+        stage = new Stage();
+        Scene scene = new Scene(root, 1366, 768);
+        stage.setFullScreen(true);
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.setScene(scene);
+        stage.show();
+
+
+        StackPane stackPane = new StackPane();
+        stackPane.setPrefWidth(scene.getWidth());
+        stackPane.setPrefHeight(scene.getHeight());
+
+        Label countLabel = new Label();
+        countLabel.setTextAlignment(TextAlignment.CENTER);
+        countLabel.setFont(new Font("Arial  ", 40));
+        stackPane.getChildren().add(countLabel);
+        root.getChildren().add(stackPane);
+
 
         final GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
         initDraw(graphicsContext);
-        c.setFill(Color.BLUE);
-
-        AnchorPane root = new AnchorPane();
-        //   root.setBackground(new Background(new BackgroundFill(Color.RED,new CornerRadii(0), new Insets(0))));
-        ImageView im = new ImageView("images/noTitle.png");
-        root.getChildren().add(im);
-        im.setLayoutX(1000);
-        canvas.setLayoutX(1000);
-        root.getChildren().add(canvas);
-        canvas.toFront();
-        System.out.println();
-        Stage primaryStage=new Stage();
-        Scene scene = new Scene(root, 1366, 768);
-        primaryStage.setFullScreen(true);
-        primaryStage.initStyle(StageStyle.UNDECORATED);
-        primaryStage.setTitle("java-buddy.blogspot.com");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        fingerCircle.setFill(Color.BLUE);
+        fingerCircle.setLayoutX(1366 / 2);
+        fingerCircle.setLayoutY((768 / 3) * 2);
+        root.getChildren().add(fingerCircle);
+        fingerCircle.setVisible(false);
         graphicsContext.beginPath();
-        root.getChildren().add(c);
-        c.setLayoutX(1366 / 2);
-        c.setLayoutY((768 / 3) * 2);
 
 
+        AtomicBoolean work = new AtomicBoolean(true);
+        Thread t = new Thread(() -> {
+            try {
+                Platform.runLater(() -> countLabel.setText(("Começando em: \n5")));
+                Thread.sleep(1000);
+                Platform.runLater(() -> countLabel.setText(("Começando em: \n4")));
+                Thread.sleep(1000);
+                Platform.runLater(() -> countLabel.setText(("Começando em: \n3")));
+                Thread.sleep(1000);
+                Platform.runLater(() -> countLabel.setText(("Começando em: \n2")));
+                Thread.sleep(1000);
+                Platform.runLater(() -> countLabel.setText(("Começando em: \n1")));
+                Thread.sleep(1000);
+                Platform.runLater(() -> countLabel.setText(("Começando em: \n0")));
 
-        new Thread(() -> {
-//            try {
-//                Thread.sleep(10000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-            for (int i = 0; i < canvas.getWidth() - gd.getDisplayMode().getWidth(); i++) {
+                FadeTransition ft = new FadeTransition(Duration.millis(1000), stackPane);
+                ft.setFromValue(1.0);
+                ft.setToValue(0);
+                ft.setCycleCount(1);
+                ft.setAutoReverse(false);
+                ft.setOnFinished(event -> {
+                    stackPane.setVisible(false);
+                    fingerCircle.setVisible(true);
+                    locked = false;
+                });
+                ft.play();
 
-                Point2D b = canvas.screenToLocal(c.getLayoutX(), c.getLayoutY());
-                graphicsContext.lineTo(b.getX(), b.getY());
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
+            int pixelsJumped = 3;
+
+            double fingerCircleX = fingerCircle.getLayoutX();
+            while ((fingerCircleX < canvas.getLayoutX() + canvas.getWidth() + 10) && work.get()) {
+//                System.out.println((fingerCircleX<totalXFingerCirclePixelRun)+" ++ "+fingerCircleX+" ++ "+ totalXFingerCirclePixelRun);
+                Point2D b = null;
+                try {
+                    b = canvas.screenToLocal(fingerCircleX, fingerCircle.getLayoutY());
+                } catch (NullPointerException n) {
+                    System.out.println("1");
+                }
+                try {
+                    graphicsContext.lineTo(b.getX(), b.getY());
+                } catch (NullPointerException n) {
+                    System.out.println("2");
+                }
+
                 Platform.runLater(() -> {
-                    graphicsContext.stroke();
-                    canvas.setLayoutX(canvas.getLayoutX() - 1);
-                    im.setLayoutX(im.getLayoutX() - 1);
+                    try {
+                        graphicsContext.stroke();
+                    } catch (NullPointerException n) {
+                        System.out.println("3");
+                    }
+
+                    try {
+                        canvas.setLayoutX(canvas.getLayoutX() - pixelsJumped);
+                    } catch (NullPointerException n) {
+                        System.out.println("4");
+                    }
+                    try {
+                        im.setLayoutX(im.getLayoutX() - pixelsJumped);
+                    } catch (NullPointerException n) {
+                        System.out.println("5");
+                    }
+
                 });
                 try {
-                    Thread.sleep(10);
+                    Thread.sleep(10 * pixelsJumped);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-            JOptionPane.showMessageDialog(null, "acabou");
-        }).start();
+            if (work.get())
+                postDoneOperation();
+        });
 
+        t.start();
+
+
+        stage.setOnHiding(event -> {
+            System.out.println("Closing Stage");
+            work.set(false);
+            PathObjectMoveFunction.getInstance().stop();
+            isRunning = false;
+        });
+
+    }
+
+    private void postDoneOperation() {
+        SnapshotParameters params = new SnapshotParameters();
+        params.setFill(Color.TRANSPARENT);
+
+        AtomicReference<WritableImage> snapshot = new AtomicReference<>();
+        Platform.runLater(() -> {
+            snapshot.set(canvas.snapshot(params, null));
+            try {
+                ImageIO.write(SwingFXUtils.fromFXImage(snapshot.get(), null), "png", new FileChooser().showSaveDialog(null));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            isRunning = false;
+            stage.close();
+        });
     }
 
     public void moveObject(int y) {
 
 
-        System.out.println("y:"+ y);
-        if (y - c.getRadius() < c.getRadius())
-            y = (int) c.getRadius();
+        if (!locked) {
+            if (y - fingerCircle.getRadius() < fingerCircle.getRadius())
+                y = (int) fingerCircle.getRadius();
 
-        if (y + c.getRadius() >= 755)
-            y = (int) (755 - c.getRadius());
+            if (y + fingerCircle.getRadius() >= 755)
+                y = (int) (755 - fingerCircle.getRadius());
 
 
-        c.setLayoutY(y);
-
+            fingerCircle.setLayoutY(y);
+        }
 
     }
+
     private void initDraw(GraphicsContext gc) {
         double canvasWidth = gc.getCanvas().getWidth();
         double canvasHeight = gc.getCanvas().getHeight();
@@ -116,7 +234,7 @@ public class PathScene  {
 
         gc.setFill(Color.RED);
         gc.setStroke(Color.BLUE);
-        gc.setLineWidth(10);
+        gc.setLineWidth(5);
 
     }
 

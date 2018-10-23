@@ -1,5 +1,6 @@
 package javafx;
 
+import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -10,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -17,8 +19,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
 import java.awt.*;
 import java.util.Objects;
@@ -53,19 +58,39 @@ public class DrawOnCanvas extends Application {
         root.getChildren().add(canvas);
         canvas.toFront();
         System.out.println();
-        Scene scene = new Scene(root, 1366, 768);
         primaryStage.setFullScreen(true);
         primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.setTitle("java-buddy.blogspot.com");
-        primaryStage.setScene(scene);
-        primaryStage.show();
         graphicsContext.beginPath();
         root.getChildren().add(c);
         c.setLayoutX(1366 / 2);
         c.setLayoutY((768 / 3) * 2);
 
+        Scene scene = new Scene(root, 1366, 768);
 
 
+
+        StackPane stackPane = new StackPane();
+        Label countLabel = new Label();
+        countLabel.setTextAlignment(TextAlignment.CENTER);
+        countLabel.setFont(new Font("Arial  ",30 ));
+        countLabel.setText("Começando em:\n3");
+        stackPane.getChildren().add(countLabel);
+        root.getChildren().add(stackPane);
+
+
+        FadeTransition ft = new FadeTransition(Duration.millis(3000), stackPane);
+        ft.setFromValue(1.0);
+        ft.setToValue(0);
+        ft.setCycleCount(1);
+        ft.setAutoReverse(false);
+
+        ft.play();
+        ft.setOnFinished(event -> stackPane.setVisible(false));
+
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
         /*
         funções dos botoes
          */
@@ -129,7 +154,7 @@ public class DrawOnCanvas extends Application {
         }).start();
 
         */
-        new Thread(() -> {
+        /*new Thread(() -> {
 //            try {
 //                Thread.sleep(10000);
 //            } catch (InterruptedException e) {
@@ -150,7 +175,7 @@ public class DrawOnCanvas extends Application {
                     e.printStackTrace();
                 }
             }
-        }).start();
+        }).start();*/
 
     }
 

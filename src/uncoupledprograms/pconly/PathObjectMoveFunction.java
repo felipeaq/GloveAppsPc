@@ -61,7 +61,7 @@ public class PathObjectMoveFunction {
                     double alpha = 2;
                     int cont_restox = 0;
                     int cont_restoy = 0;
-                    double threshold_parada = 2.7;
+                    double threshold_parada = 3;
                     double delta_pointerX = 0;
                     double delta_pointerY = 0;
                     int x_anterior = 0;
@@ -107,7 +107,7 @@ public class PathObjectMoveFunction {
 
 
                         if (!parado) {
-                            double ST = 0.01;
+                            double ST = 0.012;
                             if (Math.abs(deltaY2) > ST) {
                                 // faixas de valores
                                 if (Math.abs(deltaY2) < 0.4) {
