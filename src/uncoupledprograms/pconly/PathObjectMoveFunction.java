@@ -61,7 +61,7 @@ public class PathObjectMoveFunction {
                     double alpha = 2;
                     int cont_restox = 0;
                     int cont_restoy = 0;
-                    double threshold_parada = 3;
+                    double threshold_parada = 2.7;
                     double delta_pointerX = 0;
                     double delta_pointerY = 0;
                     int x_anterior = 0;

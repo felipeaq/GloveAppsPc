@@ -20,6 +20,7 @@ import uncoupledprograms.pconly.*;
 
 import javax.sound.sampled.*;
 import javax.swing.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -144,6 +145,16 @@ public class FollowThePathScreenController implements Initializable, IPathScreen
 
     @Override
     public void moveObject(int y) {
+
+    }
+
+    @Override
+    public void setCreatedImage(BufferedImage combined) {
+
+    }
+
+    @Override
+    public void serviceStopped() {
 
     }
 }

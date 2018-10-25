@@ -8,18 +8,22 @@ import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.FillRule;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import uncoupledprograms.pconly.IPathScreen;
 import uncoupledprograms.pconly.PathObjectMoveFunction;
 
 import java.awt.*;
@@ -27,6 +31,8 @@ import java.awt.*;
 import javafx.scene.control.Label;
 
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -35,37 +41,49 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * @web http://java-buddy.blogspot.com/
  */
-@SuppressWarnings("Duplicates")
+
 public class PathScene {
     private volatile boolean locked = true;
     private Circle fingerCircle = new Circle(5);
     private Canvas canvas;
     private ImageView im;
     private boolean isRunning = false;
-    private PathSceneCaller caller;
+    private IPathScreen caller;
     private Stage stage;
+    private static PathScene ME;
 
+    private PathScene(){
+    }
 
-    public void start(PathSceneCaller caller) {
+    public static PathScene getInstance(){
+        if (ME==null)
+            ME=new PathScene();
+        return ME;
+    }
+
+    public void start(IPathScreen caller, String pathImage) {
         if (isRunning)
             return;
         isRunning = true;
         this.caller = caller;
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
-        im = new ImageView("images/noTitle2.png");
+        im = new ImageView(pathImage);
+
         AnchorPane root = new AnchorPane();
         root.getChildren().add(im);
 
         canvas = new Canvas(im.getImage().getWidth(), im.getImage().getHeight());
         root.getChildren().add(canvas);
 
+        // canvas.getGraphicsContext2D().drawImage(image, 0, 0);
+
         im.setLayoutX(1000);
         canvas.setLayoutX(1000);
         canvas.toFront();
 
         stage = new Stage();
-        Scene scene = new Scene(root, 1366, 768);
+        Scene scene = new Scene(root, gd.getDisplayMode().getWidth(), gd.getDisplayMode().getHeight());
         stage.setFullScreen(true);
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setScene(scene);
@@ -81,7 +99,6 @@ public class PathScene {
         countLabel.setFont(new Font("Arial  ", 40));
         stackPane.getChildren().add(countLabel);
         root.getChildren().add(stackPane);
-
 
         final GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
         initDraw(graphicsContext);
@@ -107,7 +124,11 @@ public class PathScene {
                 Platform.runLater(() -> countLabel.setText(("Começando em: \n1")));
                 Thread.sleep(1000);
                 Platform.runLater(() -> countLabel.setText(("Começando em: \n0")));
+                stackPane.setVisible(false);
+                fingerCircle.setVisible(true);
+                locked = false;
 
+/*
                 FadeTransition ft = new FadeTransition(Duration.millis(1000), stackPane);
                 ft.setFromValue(1.0);
                 ft.setToValue(0);
@@ -118,8 +139,7 @@ public class PathScene {
                     fingerCircle.setVisible(true);
                     locked = false;
                 });
-                ft.play();
-
+                ft.play();*/
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -170,6 +190,7 @@ public class PathScene {
             }
             if (work.get())
                 postDoneOperation();
+            caller.serviceStopped();
         });
 
         t.start();
@@ -188,17 +209,28 @@ public class PathScene {
         SnapshotParameters params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
 
+
         AtomicReference<WritableImage> snapshot = new AtomicReference<>();
         Platform.runLater(() -> {
+            canvas.getGraphicsContext2D().setFillRule(FillRule.EVEN_ODD);
+            BufferedImage combined = new BufferedImage((int) im.getImage().getWidth(), (int) im.getImage().getHeight(), BufferedImage.TYPE_INT_RGB);//);
+
             snapshot.set(canvas.snapshot(params, null));
-            try {
-                ImageIO.write(SwingFXUtils.fromFXImage(snapshot.get(), null), "png", new FileChooser().showSaveDialog(null));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            isRunning = false;
-            stage.close();
+
+            Graphics g = combined.getGraphics();
+            g.setColor(java.awt.Color.WHITE);
+            g.drawImage(SwingFXUtils.fromFXImage(im.getImage(), null), 0, 0, null);
+            g.drawImage(SwingFXUtils.fromFXImage(snapshot.get(), null), 0, 0, null);
+            caller.setCreatedImage(combined);
+
+//            BufferedImage image = SwingFXUtils.fromFXImage(im.getImage(), null);
+
+
+                isRunning = false;
+                stage.close();
+
         });
+
     }
 
     public void moveObject(int y) {
