@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXToggleButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="600.0" prefWidth="1000.0" stylesheets="@css/css.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.MainScreenController">
+   <left>
+      <VBox alignment="CENTER" prefHeight="370.0" prefWidth="200.0" style="-fx-background-color: #222;" BorderPane.alignment="CENTER">
+         <children>
+            <AnchorPane>
+               <children>
+                  <VBox alignment="TOP_CENTER" prefHeight="182.0" prefWidth="200.0">
+                     <children>
+                        <StackPane VBox.vgrow="NEVER">
+                           <children>
+                              <Circle fill="#2b71dc" radius="15.0" stroke="TRANSPARENT" strokeType="INSIDE" />
+                              <ImageView fitHeight="29.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/bt.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </StackPane>
+                        <JFXToggleButton fx:id="btToogle" contentDisplay="TOP" graphicTextGap="0.0" mnemonicParsing="false" onAction="#toogleAction" prefHeight="27.0" prefWidth="107.0" size="6.0" style="-jfx-untoggle-line-color: #e4e4e4;" text="Bluetooth Status:" textFill="WHITE" toggleColor="#2b71dc" toggleLineColor="#5398ff" unToggleLineColor="#f5f5f5">
+                           <padding>
+                              <Insets left="-10.0" right="-10.0" />
+                           </padding>
+                           <VBox.margin>
+                              <Insets left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </JFXToggleButton>
+                        <Label fx:id="btStatus" alignment="TOP_CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="206.0" text="Disconnected" textAlignment="CENTER" textFill="WHITE" VBox.vgrow="ALWAYS" />
+                        <VBox prefHeight="1.0" prefWidth="1.0" style="-fx-background-color: #444;">
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="20.0" top="20.0" />
+                     </padding>
+                  </VBox>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" onMouseClicked="#configsBtnAction" pickOnBounds="true" preserveRatio="true" style="-fx-border-color: #fff; -fx-border-width: 2;" AnchorPane.leftAnchor="170.0" AnchorPane.topAnchor="5.0">
+                     <image>
+                        <Image url="@../images/settings.png" />
+                     </image>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ImageView>
+               </children>
+            </AnchorPane>
+            <VBox fx:id="buttonsContainer" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <JFXButton mnemonicParsing="false" onAction="#keyboardModeBtnAction" prefHeight="30.0" prefWidth="500.0" styleClass="normal-menu-button" text="Keyboard Mode">
+                     <padding>
+                        <Insets bottom="20.0" top="20.0" />
+                     </padding>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </JFXButton>
+                  <JFXButton mnemonicParsing="false" onAction="#mouseModeBtnAction" prefHeight="30.0" prefWidth="500.0" styleClass="normal-menu-button" text="Mouse Mode">
+                     <padding>
+                        <Insets bottom="20.0" top="20.0" />
+                     </padding>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </JFXButton>
+                  <JFXButton mnemonicParsing="false" onAction="#hand3dModeBtnAction" prefHeight="30.0" prefWidth="500.0" styleClass="normal-menu-button" text="3D Hand Mode">
+                     <padding>
+                        <Insets bottom="20.0" top="20.0" />
+                     </padding>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </JFXButton>
+                  <JFXButton mnemonicParsing="false" onAction="#chartsBtnAction" prefHeight="30.0" prefWidth="500.0" styleClass="normal-menu-button" text="Charts">
+                     <padding>
+                        <Insets bottom="20.0" top="20.0" />
+                     </padding>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </JFXButton>
+                  <JFXButton layoutX="10.0" layoutY="178.0" mnemonicParsing="false" onAction="#reactionTestBtnAction" prefHeight="30.0" prefWidth="500.0" styleClass="normal-menu-button" text="ReactionTest">
+                     <padding>
+                        <Insets bottom="20.0" top="20.0" />
+                     </padding>
+                  </JFXButton>
+                  <JFXButton layoutX="10.0" layoutY="234.0" mnemonicParsing="false" onAction="#pathBtnAction" prefHeight="30.0" prefWidth="500.0" styleClass="normal-menu-button" text="Follow the Path">
+                     <padding>
+                        <Insets bottom="20.0" top="20.0" />
+                     </padding>
+                  </JFXButton>
+                  <JFXButton mnemonicParsing="false" onAction="#futureAppsBtnAction" prefHeight="30.0" prefWidth="500.0" styleClass="normal-menu-button" text="Future Applications">
+                     <padding>
+                        <Insets bottom="20.0" top="20.0" />
+                     </padding>
+                  </JFXButton>
+               </children>
+            </VBox>
+         </children></VBox>
+   </left>
+   <center>
+      <VBox fx:id="container" prefHeight="370.0" prefWidth="423.0" style="-fx-background-color: #fafafa;" BorderPane.alignment="CENTER" />
+   </center>
+   <top>
+      <HBox prefHeight="0.0" prefWidth="600.0" style="-fx-background-color: #aaa;" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="27.0" prefWidth="151.0" HBox.hgrow="ALWAYS">
+               <padding>
+                  <Insets left="32.0" />
+               </padding>
+               <children>
+                  <Label alignment="CENTER" prefHeight="16.0" prefWidth="1000000.0" text="Smart Glove App" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font size="21.0" />
+                     </font></Label>
+               </children></HBox>
+            <HBox alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="0.0" HBox.hgrow="NEVER">
+               <children>
+                  <StackPane onMouseClicked="#minimize" prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <Circle fill="#0c89cd" radius="12.0" stroke="TRANSPARENT" strokeType="INSIDE">
+                           <StackPane.margin>
+                              <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                           </StackPane.margin>
+                        </Circle>
+                        <Label text="-" textFill="WHITE">
+                           <font>
+                              <Font size="33.0" />
+                           </font>
+                           <padding>
+                              <Insets bottom="-5.0" left="-5.0" right="-5.0" top="-5.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </StackPane>
+                  <StackPane onMouseClicked="#close" prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <Circle fill="#e10b0b" radius="12.0" stroke="TRANSPARENT" strokeType="INSIDE">
+                           <StackPane.margin>
+                              <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                           </StackPane.margin>
+                        </Circle>
+                        <Label text="x" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="19.0" />
+                           </font>
+                           <padding>
+                              <Insets left="-3.0" right="-5.0" top="-5.0" />
+                           </padding>
+                           <StackPane.margin>
+                              <Insets right="1.0" />
+                           </StackPane.margin>
+                        </Label>
+                     </children>
+                  </StackPane>
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+   </top>
+</BorderPane>

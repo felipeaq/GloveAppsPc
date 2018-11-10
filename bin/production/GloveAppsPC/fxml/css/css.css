@@ -1,0 +1,36 @@
+.selected {
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+    -fx-text-fill: #000;
+}
+
+.selected:hover {
+    -fx-background-color: rgba(255, 255, 255, 1);
+    -fx-text-fill: #000;
+}
+
+.normal-menu-button {
+    -fx-background-color: rgba(255, 255, 255, 0.0);
+    -fx-text-fill: #FaFaFa;
+}
+
+.normal-menu-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-text-fill: #FaFaFa;
+}
+
+.text-area *.text {
+    -fx-text-alignment: center;
+}
+
+.keyboard-right-buttons {
+    -fx-background-color: rgba(127, 127, 127, 0.5);
+}
+
+.keyboard-left-buttons {
+    -fx-background-color: rgba(127, 127, 127, 0.5);
+    -fx-border-insets: 5px;
+}
+
+.thick-chart .chart-series-line {
+    -fx-stroke-width: 1px;
+}
