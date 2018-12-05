@@ -176,11 +176,11 @@ public class MainScreenController implements Initializable, IBlutoothInfoScreen 
     }
 
     @Override
-    public void connectionFailure() {
+    public void connectionFailure(String m) {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                btStatus.setText("Disconnected\nFailed to Connect");
+                btStatus.setText("Disconnected\nFailed to Connect\n"+m);
                 btToogle.setSelected(false);
             }
         });

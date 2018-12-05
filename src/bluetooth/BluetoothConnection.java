@@ -1,11 +1,14 @@
 package bluetooth;
 
+import com.intel.bluetooth.RemoteDeviceHelper;
+import javafx.fxml.Initializable;
 import uncoupledglovedatathings.GloveSensors;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.ByteBuffer;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.bluetooth.DeviceClass;
 import javax.bluetooth.DiscoveryAgent;
 import javax.bluetooth.DiscoveryListener;
@@ -28,6 +31,9 @@ public class BluetoothConnection {
     private boolean hasError = false;
     private static BluetoothConnection ME;
     private IBlutoothInfoScreen blutoothInfoScreen;
+    private List<IPostAppendScreen> postAppendScreenList = new ArrayList<>();
+
+    private final static Logger LOGGER = Logger.getLogger(BluetoothConnection.class.getName());
 
     public static class BluetoothStatus {
         private BluetoothConnection b;
@@ -61,11 +67,14 @@ public class BluetoothConnection {
 
     }
 
+
     public boolean isConnected() {
         return isConnected;
     }
 
     public void tryToConnect(String gloveName) {
+
+
         if (isConnected)
             return;
         Thread t = new Thread(() -> {
@@ -76,10 +85,11 @@ public class BluetoothConnection {
                     @Override
                     public void deviceDiscovered(RemoteDevice btDevice, DeviceClass cod) {
                         try {
-                              String name = btDevice.getFriendlyName(false);
+                            String name = btDevice.getFriendlyName(false);
                             System.out.format("%s (%s)\n", name, btDevice.getBluetoothAddress());
                             if (name.equals(gloveName)) {
                                 hc05device = btDevice;
+                                RemoteDeviceHelper.authenticate(hc05device, "1234");
                                 System.out.println("got it!");
                                 LocalDevice.getLocalDevice().getDiscoveryAgent().cancelInquiry(this);
                             }
@@ -113,6 +123,9 @@ public class BluetoothConnection {
                 };
 
 
+                if (hc05device == null) {
+                    blutoothInfoScreen.connectionFailure("Glove not found.\nMake sure it is on");
+                }                    //todo hc05device != null assert
                 scanFinished = false;
                 LocalDevice.getLocalDevice().getDiscoveryAgent().searchServices(attrIDs, searchUuidSet,
                         hc05device, new DiscoveryListener() {
@@ -166,7 +179,7 @@ public class BluetoothConnection {
                 os.close();
                 is.close();
                 if (hasError) {
-                    blutoothInfoScreen.connectionFailure();
+                    blutoothInfoScreen.connectionFailure("");
                     hasError = false;
                     System.out.println("BT connection closed by error");
                 } else {
@@ -178,18 +191,41 @@ public class BluetoothConnection {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                blutoothInfoScreen.connectionFailure();
+                blutoothInfoScreen.connectionFailure("");
+                PrintWriter pw = null;
+                try {
+                    File f = (new File("log" + new Date().toString() + ".txt"));
+                    f.createNewFile();
+                    pw = new PrintWriter(f);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                e.printStackTrace(pw);
+                pw.close();
+
+
             }
         });
 
         t.start();
+
     }
+
+    public static boolean schedulePostAppendRunnable(IPostAppendScreen initializable) {
+        if (ME != null) {
+            if (!ME.postAppendScreenList.contains(initializable))
+                ME.postAppendScreenList.add(initializable);
+            return true;
+        }
+        return false;
+    }
+
 
     public void disconnect() {
         isConnected = false;
     }
 
-    public void disconnectWithError() {
+    private void disconnectWithError() {
         isConnected = false;
         hasError = true;
     }
@@ -277,6 +313,19 @@ public class BluetoothConnection {
                 readNextValue(),
                 readNextValue(),
                 readNextValue());
+        List<IPostAppendScreen> removeList = new ArrayList<>();
+        for (IPostAppendScreen ipas : postAppendScreenList) {
+            try {
+                ipas.getPostAppendRunnable().run();
+            } catch (Exception e) {
+                removeList.add(ipas);
+                e.printStackTrace();
+            }
+        }
+        for (IPostAppendScreen ipas : removeList) {
+            postAppendScreenList.remove(ipas);
+        }
+
     }
 
     private double readNextValue() {
