@@ -103,5 +103,10 @@
                </JFXButton>
            </children>
         </HBox>
+      <Label fx:id="score" layoutX="291.0" layoutY="10.0" text="Score:">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
     </children>
 </VBox>

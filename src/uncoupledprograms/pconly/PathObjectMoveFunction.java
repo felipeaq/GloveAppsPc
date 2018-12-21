@@ -9,7 +9,7 @@ import java.awt.event.InputEvent;
 public class PathObjectMoveFunction {
 
     boolean work = false;
-
+    double ST = 0.13;
     private static PathObjectMoveFunction ME;
 
     private PathObjectMoveFunction() {
@@ -25,7 +25,7 @@ public class PathObjectMoveFunction {
     public void start(IPathScreen pathScreen, int containerW, int containerH) {
         if (!isWorking()) {
             work = true;
-            mouseMove(pathScreen, containerW, containerH);
+            mouseMove(pathScreen);
         }
     }
 
@@ -37,7 +37,7 @@ public class PathObjectMoveFunction {
         return work;
     }
 
-    private void mouseMove(IPathScreen pathScreen, int containerW, int containerH) {
+    private void mouseMove(IPathScreen pathScreen) {
 
 
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
@@ -47,29 +47,29 @@ public class PathObjectMoveFunction {
 
             Thread thread = new Thread() {
                 public void run() {
-                    int x = gd.getDisplayMode().getWidth() / 2;
+
                     int y = gd.getDisplayMode().getHeight() / 2;
-                    int maxX = gd.getDisplayMode().getWidth();
+
                     int maxY = gd.getDisplayMode().getHeight();
 
 
 
-                    double resto_pointerX = 0;
+
                     double resto_pointerY = 0;
 
                     int d = 1;
                     double alpha = 2;
-                    int cont_restox = 0;
+
                     int cont_restoy = 0;
 
-                    double delta_pointerX = 0;
+
                     double delta_pointerY = 0;
 
                     int y_anterior = 0;
 
 
 
-                    mouse.mouseMove(x, y);
+                    mouse.mouseMove(gd.getDisplayMode().getWidth() / 2, y);
 
                     while (work) {
 
@@ -85,7 +85,7 @@ public class PathObjectMoveFunction {
                         }
 
 
-                        double ST = 0.012;
+
                         if (Math.abs(deltaY2) > ST) {
                             // faixas de valores
                             if (Math.abs(deltaY2) < 0.4) {
@@ -115,13 +115,7 @@ public class PathObjectMoveFunction {
                             }
                         }
 
-                       
-                        if (x > maxX) {
-                            x = maxX;
-                        }
-                        if (x < 0) {
-                            x = 0;
-                        }
+
                         if (y > maxY) {
                             y = maxY;
                         }

@@ -48,9 +48,12 @@ public class PathScene {
     private Canvas canvas;
     private ImageView im;
     private boolean isRunning = false;
-    private IPathScreen caller;
+    private FollowThePath2ScreenController caller;
     private Stage stage;
     private static PathScene ME;
+    private int miss;
+    private int hit;
+
 
     private PathScene(){
     }
@@ -61,7 +64,7 @@ public class PathScene {
         return ME;
     }
 
-    public void start(IPathScreen caller, String pathImage) {
+    public void start(FollowThePath2ScreenController caller, String pathImage) {
         if (isRunning)
             return;
         isRunning = true;
@@ -102,6 +105,7 @@ public class PathScene {
 
         final GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
         initDraw(graphicsContext);
+        //TODO pegar o tamanho de tela pelo S.O.
         fingerCircle.setFill(Color.BLUE);
         fingerCircle.setLayoutX(1366 / 2);
         fingerCircle.setLayoutY((768 / 3) * 2);
@@ -109,7 +113,8 @@ public class PathScene {
         fingerCircle.setVisible(false);
         graphicsContext.beginPath();
 
-
+        miss=0;
+        hit=0;
         AtomicBoolean work = new AtomicBoolean(true);
         Thread t = new Thread(() -> {
             try {
@@ -148,17 +153,52 @@ public class PathScene {
 
             int pixelsJumped = 3;
 
+
+
+
             double fingerCircleX = fingerCircle.getLayoutX();
             while ((fingerCircleX < canvas.getLayoutX() + canvas.getWidth() + 10) && work.get()) {
-//                System.out.println((fingerCircleX<totalXFingerCirclePixelRun)+" ++ "+fingerCircleX+" ++ "+ totalXFingerCirclePixelRun);
+                //System.out.print(im.getImage().getPixelReader().getColor((int)fingerCircle.getLayoutX(), (int)fingerCircleX).toString()+" ");//TODO descobrir x e y
+                //System.out.println(fingerCircle.getLayoutY()+" "+fingerCircleX);
+//
                 Point2D b = null;
                 try {
                     b = canvas.screenToLocal(fingerCircleX, fingerCircle.getLayoutY());
                 } catch (NullPointerException n) {
                     System.out.println("1");
                 }
+
+                try {
+                    //double time =System.currentTimeMillis();
+
+                    if(im.getImage().getPixelReader().getColor((int)b.getX(), (int)b.getY()).equals(Color.BLACK)){
+                        hit++;
+                    }else{
+                        miss++;
+                    }
+
+                    //System.out.println((b.getX()+" "+ b.getY()+" "+(System.currentTimeMillis()-time)));
+
+
+
+
+
+
+
+
+                } catch (NullPointerException n) {
+                    System.out.println("44");
+                } catch (IndexOutOfBoundsException e){
+
+                }
+
+
                 try {
                     graphicsContext.lineTo(b.getX(), b.getY());
+
+
+
+
                 } catch (NullPointerException n) {
                     System.out.println("2");
                 }
@@ -193,7 +233,11 @@ public class PathScene {
             caller.serviceStopped();
         });
 
+
         t.start();
+
+
+        //Nada dps daqui é executado
 
 
         stage.setOnHiding(event -> {
@@ -201,7 +245,15 @@ public class PathScene {
             work.set(false);
             PathObjectMoveFunction.getInstance().stop();
             isRunning = false;
+
+            if (miss+hit>0) {
+                this.caller.setScore((double)hit/(hit+miss)*100);
+            }else{
+                this.caller.setScore();
+            }
         });
+
+
 
     }
 
@@ -245,6 +297,7 @@ public class PathScene {
 
 
             fingerCircle.setLayoutY(y);
+
         }
 
     }

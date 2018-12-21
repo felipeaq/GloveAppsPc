@@ -33,6 +33,7 @@ public class FollowThePath2ScreenController implements Initializable, IPathScree
     public ImageView generatedImage;
     public Label status;
     public Label selectedImage;
+    public Label score;
     private BufferedImage bufferedImage;
 
     @Override
@@ -42,6 +43,14 @@ public class FollowThePath2ScreenController implements Initializable, IPathScree
             selectedImage.setText("Default Image");
         else
             selectedImage.setText(preferenceUtils.getLastUsedPathImage().split(":")[1]);
+    }
+
+    public void setScore(double scoreRate){
+        this.score.setText("score: "+String.format("%.2f", scoreRate)+"%");
+    }
+
+    public void setScore(){
+        this.score.setText("score: ");
     }
 
     @FXML
