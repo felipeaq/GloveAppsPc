@@ -64,4 +64,6 @@ public class PreferenceUtils {
         String s = getLastUsedPathImage();
         return getLastUsedPathImage().equalsIgnoreCase(DEFAULT_PATH_IMAGE);
     }
+
+
 }

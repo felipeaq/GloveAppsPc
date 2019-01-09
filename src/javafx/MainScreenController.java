@@ -19,6 +19,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import uncoupledprograms.DataSaveCsv;
 
 import javax.swing.*;
 import javax.swing.text.html.ImageView;
@@ -36,13 +37,42 @@ public class MainScreenController implements Initializable, IBlutoothInfoScreen 
     @FXML
     JFXToggleButton btToogle;
 
+    @FXML
+    CheckBox cbGyro, cbAcc;
+
     private BluetoothConnection bluetoothConnection = BluetoothConnection.getInstance(this);
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        System.out.println(cbGyro);
+        cbGyro.setOnAction(this::gyroAction);
+        cbAcc.setOnAction(this::accAction);
+
     }
 
+    private void gyroAction(ActionEvent actionEvent) {
+        if(cbGyro.isSelected()){
+
+            DataSaveCsv.getInstance().turnOnAutoSavingGyro();
+
+        }else{
+            DataSaveCsv.getInstance().turnOffAutoSavingGyro();
+
+
+        }
+
+    }
+
+    private void accAction(ActionEvent actionEvent) {
+
+        if(cbAcc.isSelected()){
+            DataSaveCsv.getInstance().turnOnAutoSavingAcc();
+        }else{
+            DataSaveCsv.getInstance().turnOffAutoSavingAcc();
+        }
+    }
 
     public void minimize(MouseEvent mouseEvent) {
         minimizeStageOfNode((Node) mouseEvent.getSource());
@@ -131,6 +161,7 @@ public class MainScreenController implements Initializable, IBlutoothInfoScreen 
         PreferenceUtils preferenceUtils = new PreferenceUtils();
 
         ChoiceDialog<String> dialog = new ChoiceDialog<>(preferenceUtils.getUsedGlove(), dialogData);
+
         dialog.setTitle("Glove selection");
         dialog.setHeaderText("Select your using glove");
         Optional<String> result = dialog.showAndWait();
@@ -140,6 +171,10 @@ public class MainScreenController implements Initializable, IBlutoothInfoScreen 
             selected = result.get();
             preferenceUtils.saveUsedGlove(selected);
         }
+
+
+
+
 
     }
 

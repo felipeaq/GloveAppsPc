@@ -3,7 +3,7 @@ package bluetooth;
 import com.intel.bluetooth.RemoteDeviceHelper;
 import javafx.fxml.Initializable;
 import uncoupledglovedatathings.GloveSensors;
-
+import uncoupledprograms.DataSaveCsv;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.*;
@@ -52,6 +52,8 @@ public class BluetoothConnection {
 
     private BluetoothConnection() {
     }
+
+
 
 
     public static BluetoothStatus getBluetoothStatus() {
@@ -174,6 +176,7 @@ public class BluetoothConnection {
                         shownConnected = true;
                     }
                     appendSensors();
+                    autoAppendValues();
                 }
 
                 os.close();
@@ -273,6 +276,67 @@ public class BluetoothConnection {
                 disconnectWithError();
             }
         }
+    }
+
+    private void autoAppendValues() {
+        DataSaveCsv saveCsv = DataSaveCsv.getInstance();
+
+        final GloveSensors glove = GloveSensors.getInstance();
+        if (saveCsv.isAutoSavingGyro()) {
+            //System.out.println(saveCsv.isAutoSavingGyro());
+
+            ArrayList<Double> arrGyro = new ArrayList<Double>() {{
+                add(glove.getSensor1().getGx().lastElement());
+                add(glove.getSensor1().getGy().lastElement());
+                add(glove.getSensor1().getGz().lastElement());
+                add(glove.getSensor2().getGx().lastElement());
+                add(glove.getSensor2().getGy().lastElement());
+                add(glove.getSensor2().getGz().lastElement());
+                add(glove.getSensor3().getGx().lastElement());
+                add(glove.getSensor3().getGy().lastElement());
+                add(glove.getSensor3().getGz().lastElement());
+                add(glove.getSensor4().getGx().lastElement());
+                add(glove.getSensor4().getGy().lastElement());
+                add(glove.getSensor4().getGz().lastElement());
+                add(glove.getSensor5().getGx().lastElement());
+                add(glove.getSensor5().getGy().lastElement());
+                add(glove.getSensor5().getGz().lastElement());
+                add(glove.getSensor6().getGx().lastElement());
+                add(glove.getSensor6().getGy().lastElement());
+                add(glove.getSensor6().getGz().lastElement());
+
+            }};
+
+            saveCsv.appendGyroData(arrGyro);
+
+        }
+
+        if (saveCsv.isAutoSavingAcc()) {
+            ArrayList<Double> arrAcc = new ArrayList<Double>() {{
+                add(glove.getSensor1().getAx().lastElement());
+                add(glove.getSensor1().getAy().lastElement());
+                add(glove.getSensor1().getAz().lastElement());
+                add(glove.getSensor2().getAx().lastElement());
+                add(glove.getSensor2().getAy().lastElement());
+                add(glove.getSensor2().getAz().lastElement());
+                add(glove.getSensor3().getAx().lastElement());
+                add(glove.getSensor3().getAy().lastElement());
+                add(glove.getSensor3().getAz().lastElement());
+                add(glove.getSensor4().getAx().lastElement());
+                add(glove.getSensor4().getAy().lastElement());
+                add(glove.getSensor4().getAz().lastElement());
+                add(glove.getSensor5().getAx().lastElement());
+                add(glove.getSensor5().getAy().lastElement());
+                add(glove.getSensor5().getAz().lastElement());
+                add(glove.getSensor6().getAx().lastElement());
+                add(glove.getSensor6().getAy().lastElement());
+                add(glove.getSensor6().getAz().lastElement());
+
+            }};
+            saveCsv.appendAccData(arrAcc);
+
+        }
+
     }
 
     private void appendSensors() {

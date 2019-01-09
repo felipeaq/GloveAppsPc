@@ -4,6 +4,7 @@ import bluetooth.BluetoothConnection;
 import bluetooth.IPostAppendScreen;
 import info.monitorenter.gui.chart.Chart2D;
 import info.monitorenter.gui.chart.ITrace2D;
+import info.monitorenter.gui.chart.rangepolicies.RangePolicyFixedViewport;
 import info.monitorenter.gui.chart.traces.Trace2DLtd;
 import info.monitorenter.util.Range;
 import javafx.application.Platform;
@@ -23,8 +24,8 @@ import java.util.ResourceBundle;
 public class ChartsScreenController implements Initializable, IPostAppendScreen {
 
 
-    public VBox accGraphsVbox;
-    public VBox gyroGraphsVbox;
+    public VBox accGraphsVboxX,accGraphsVboxY,accGraphsVboxZ;
+    public VBox gyroGraphsVboxX,gyroGraphsVboxY,gyroGraphsVboxZ;
     Thread updateThread;
 
     private Chart2D chartGyroX = new Chart2D();
@@ -84,6 +85,8 @@ public class ChartsScreenController implements Initializable, IPostAppendScreen 
 
         setupColors();
         setupTraces();
+        setupLabels();
+        setupScale();
 
 
 
@@ -103,8 +106,12 @@ public class ChartsScreenController implements Initializable, IPostAppendScreen 
         createSwingContent(snChartAccY, chartAccY);
         createSwingContent(snChartAccZ, chartAccZ);
 
-        gyroGraphsVbox.getChildren().addAll(snChartGyroX,snChartGyroY,snChartGyroZ);
-        accGraphsVbox.getChildren().addAll(snChartAccX,snChartAccY,snChartAccZ);
+        gyroGraphsVboxX.getChildren().addAll(snChartGyroX);
+        gyroGraphsVboxY.getChildren().addAll(snChartGyroY);
+        gyroGraphsVboxZ.getChildren().addAll(snChartGyroZ);
+        accGraphsVboxX.getChildren().addAll(snChartAccX);
+        accGraphsVboxY.getChildren().addAll(snChartAccY);
+        accGraphsVboxZ.getChildren().addAll(snChartAccZ);
 
 
         BluetoothConnection.schedulePostAppendRunnable(this);
@@ -125,7 +132,7 @@ public class ChartsScreenController implements Initializable, IPostAppendScreen 
     }
 
     public void start(ActionEvent event) {
-        updateThread.start();
+        //updateThread.start();
 
 //        BluetoothConnection.BluetoothStatus btStatus = BluetoothConnection.getBluetoothStatus();
 //        if (btStatus.isConnected()) {
@@ -137,7 +144,7 @@ public class ChartsScreenController implements Initializable, IPostAppendScreen 
     }
 
     public void stop(ActionEvent event) {
-        updateThread.interrupt();
+        //updateThread.interrupt();
 //        BluetoothConnection.BluetoothStatus btStatus = BluetoothConnection.getBluetoothStatus();
 //        if (btStatus.isConnected()) {
 //            virtualHandContolFunction.stop();
@@ -296,5 +303,63 @@ public class ChartsScreenController implements Initializable, IPostAppendScreen 
         TraceAccZ4.setColor(Color.YELLOW);
         TraceAccZ5.setColor(Color.MAGENTA);
         TraceAccZ6.setColor(Color.GRAY);
+    }
+
+    private void setupScale(){
+        chartAccX.getAxisY().setRangePolicy(new RangePolicyFixedViewport(new Range(-10, 10)));
+        chartAccY.getAxisY().setRangePolicy(new RangePolicyFixedViewport(new Range(-10, 10)));
+        chartAccZ.getAxisY().setRangePolicy(new RangePolicyFixedViewport(new Range(-10, 10)));
+
+        chartGyroX.getAxisY().setRangePolicy(new RangePolicyFixedViewport(new Range(-3.15, 3.15)));
+        chartGyroY.getAxisY().setRangePolicy(new RangePolicyFixedViewport(new Range(-3.15, 3.15)));
+        chartGyroZ.getAxisY().setRangePolicy(new RangePolicyFixedViewport(new Range(-3.15, 3.15)));
+
+    }
+
+    private void setupLabels(){
+
+        TraceGyroX1.setName("Sensor 1");
+        TraceGyroX2.setName("Sensor 2");
+        TraceGyroX3.setName("Sensor 3");
+        TraceGyroX4.setName("Sensor 4");
+        TraceGyroX5.setName("Sensor 5");
+        TraceGyroX6.setName("Sensor 6");
+
+        TraceGyroY1.setName("Sensor 1");
+        TraceGyroY2.setName("Sensor 2");
+        TraceGyroY3.setName("Sensor 3");
+        TraceGyroY4.setName("Sensor 4");
+        TraceGyroY5.setName("Sensor 5");
+        TraceGyroY6.setName("Sensor 6");
+
+        TraceGyroZ1.setName("Sensor 1");
+        TraceGyroZ2.setName("Sensor 2");
+        TraceGyroZ3.setName("Sensor 3");
+        TraceGyroZ4.setName("Sensor 4");
+        TraceGyroZ5.setName("Sensor 5");
+        TraceGyroZ6.setName("Sensor 6");
+
+        TraceAccX1.setName("Sensor 1");
+        TraceAccX2.setName("Sensor 2");
+        TraceAccX3.setName("Sensor 3");
+        TraceAccX4.setName("Sensor 4");
+        TraceAccX5.setName("Sensor 5");
+        TraceAccX6.setName("Sensor 6");
+
+        TraceAccY1.setName("Sensor 1");
+        TraceAccY2.setName("Sensor 2");
+        TraceAccY3.setName("Sensor 3");
+        TraceAccY4.setName("Sensor 4");
+        TraceAccY5.setName("Sensor 5");
+        TraceAccY6.setName("Sensor 6");
+
+        TraceAccZ1.setName("Sensor 1");
+        TraceAccZ2.setName("Sensor 2");
+        TraceAccZ3.setName("Sensor 3");
+        TraceAccZ4.setName("Sensor 4");
+        TraceAccZ5.setName("Sensor 5");
+        TraceAccZ6.setName("Sensor 6");
+        //TraceAccX1.getRenderer().getAxisX().setMajorTickSpacing();
+        chartAccX.getAxisY().setRangePolicy(new RangePolicyFixedViewport(new Range(0, 110)));
     }
 }

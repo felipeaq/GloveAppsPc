@@ -7,9 +7,16 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+
+
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
+        String filePathString ="res/fxml/MainScreen.fxml";
+
+
+
+
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/MainScreen.fxml"));
 
         Scene scene = new Scene(root);

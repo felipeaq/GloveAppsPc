@@ -1,0 +1,4 @@
+java.lang.NullPointerException: RemoteDevice is null
+	at javax.bluetooth.DiscoveryAgent.searchServices(DiscoveryAgent.java:324)
+	at bluetooth.BluetoothConnection.lambda$tryToConnect$0(BluetoothConnection.java:132)
+	at java.lang.Thread.run(Thread.java:748)
