@@ -105,7 +105,7 @@
                         <Insets />
                      </VBox.margin>
                   </JFXButton>
-                  <JFXButton layoutX="10.0" layoutY="178.0" mnemonicParsing="false" onAction="#reactionTestBtnAction" prefHeight="30.0" prefWidth="500.0" styleClass="normal-menu-button" text="ReactionTest">
+                  <JFXButton layoutX="10.0" layoutY="178.0" mnemonicParsing="false" onAction="#reactionTestBtnAction" prefHeight="30.0" prefWidth="500.0" styleClass="normal-menu-button" text="Reaction Test">
                      <padding>
                         <Insets bottom="20.0" top="20.0" />
                      </padding>
@@ -115,7 +115,7 @@
                         <Insets bottom="20.0" top="20.0" />
                      </padding>
                   </JFXButton>
-                  <JFXButton mnemonicParsing="false" onAction="#futureAppsBtnAction" prefHeight="30.0" prefWidth="500.0" styleClass="normal-menu-button" text="Future Applications">
+                  <JFXButton mnemonicParsing="false" onAction="#futureAppsBtnAction" prefHeight="30.0" prefWidth="500.0" styleClass="normal-menu-button" text="Correct Finger">
                      <padding>
                         <Insets bottom="20.0" top="20.0" />
                      </padding>
@@ -127,12 +127,7 @@
    <center>
       <VBox fx:id="container" prefHeight="370.0" prefWidth="423.0" style="-fx-background-color: #fafafa;" BorderPane.alignment="CENTER">
          <children>
-            <VBox prefHeight="200.0" prefWidth="100.0">
-               <children>
-                  <CheckBox fx:id="cbGyro" mnemonicParsing="false" text="Save Gyroscope" />
-                  <CheckBox fx:id="cbAcc" mnemonicParsing="false" text="Save Accelerometer" />
-               </children>
-            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0" />
          </children></VBox>
    </center>
    <top>
@@ -158,6 +153,23 @@
                            </StackPane.margin>
                         </Circle>
                         <Label text="-" textFill="WHITE">
+                           <font>
+                              <Font size="33.0" />
+                           </font>
+                           <padding>
+                              <Insets bottom="-5.0" left="-5.0" right="-5.0" top="-5.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </StackPane>
+                  <StackPane onMouseClicked="#maximize" prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <Circle fill="#0c89cd" radius="12.0" stroke="TRANSPARENT" strokeType="INSIDE">
+                           <StackPane.margin>
+                              <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                           </StackPane.margin>
+                        </Circle>
+                        <Label text="+" textFill="WHITE">
                            <font>
                               <Font size="33.0" />
                            </font>

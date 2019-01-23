@@ -6,6 +6,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXToggleButton;
 import configs.PreferenceUtils;
 import javafx.application.Application;
+import javafx.stage.Stage;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -37,8 +38,6 @@ public class MainScreenController implements Initializable, IBlutoothInfoScreen 
     @FXML
     JFXToggleButton btToogle;
 
-    @FXML
-    CheckBox cbGyro, cbAcc;
 
     private BluetoothConnection bluetoothConnection = BluetoothConnection.getInstance(this);
 
@@ -46,39 +45,29 @@ public class MainScreenController implements Initializable, IBlutoothInfoScreen 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        System.out.println(cbGyro);
-        cbGyro.setOnAction(this::gyroAction);
-        cbAcc.setOnAction(this::accAction);
+
+
+
+
+
 
     }
 
-    private void gyroAction(ActionEvent actionEvent) {
-        if(cbGyro.isSelected()){
-
-            DataSaveCsv.getInstance().turnOnAutoSavingGyro();
-
-        }else{
-            DataSaveCsv.getInstance().turnOffAutoSavingGyro();
-
-
-        }
-
-    }
-
-    private void accAction(ActionEvent actionEvent) {
-
-        if(cbAcc.isSelected()){
-            DataSaveCsv.getInstance().turnOnAutoSavingAcc();
-        }else{
-            DataSaveCsv.getInstance().turnOffAutoSavingAcc();
-        }
-    }
 
     public void minimize(MouseEvent mouseEvent) {
         minimizeStageOfNode((Node) mouseEvent.getSource());
     }
 
-    private void minimizeStageOfNode(Node node) {
+    public void maximize(MouseEvent mouseEvent) {
+        Stage st= (Stage)container.getScene().getWindow();
+        if (st.isFullScreen()){
+            st.setFullScreen(false);
+        }else {
+            st.setFullScreen(true);
+        }
+    }
+
+        private void minimizeStageOfNode(Node node) {
         ((Stage) (node).getScene().getWindow()).setIconified(true);
     }
 
@@ -137,9 +126,10 @@ public class MainScreenController implements Initializable, IBlutoothInfoScreen 
     }
 
     public void futureAppsBtnAction(ActionEvent event) {
-        System.out.println("future");
-        loadScreen("fxml/OtherApps.fxml", event);
-
+        //System.out.println("future");
+        //loadScreen("fxml/OtherApps.fxml", event);
+        Stage st= (Stage)container.getScene().getWindow();
+        st.setFullScreen(true);
 
     }
 
@@ -186,6 +176,7 @@ public class MainScreenController implements Initializable, IBlutoothInfoScreen 
         selectButton(event);
         container.getChildren().clear();
         try {
+
             container.getChildren().add(FXMLLoader.load(getClass().getClassLoader().getResource(fxml)));
         } catch (IOException | NullPointerException e) {
             e.printStackTrace();

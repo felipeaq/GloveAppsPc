@@ -1,0 +1,9 @@
+java.io.IOException: Failed to connect. [111] Conexão recusada
+	at com.intel.bluetooth.BluetoothStackBlueZ.connectionRfOpenClientConnectionImpl(Native Method)
+	at com.intel.bluetooth.BluetoothStackBlueZ.connectionRfOpenClientConnection(BluetoothStackBlueZ.java:574)
+	at com.intel.bluetooth.BluetoothRFCommClientConnection.<init>(BluetoothRFCommClientConnection.java:37)
+	at com.intel.bluetooth.MicroeditionConnector.openImpl(MicroeditionConnector.java:379)
+	at com.intel.bluetooth.MicroeditionConnector.open(MicroeditionConnector.java:162)
+	at javax.microedition.io.Connector.open(Connector.java:83)
+	at bluetooth.BluetoothConnection.lambda$tryToConnect$0(BluetoothConnection.java:163)
+	at java.lang.Thread.run(Thread.java:748)

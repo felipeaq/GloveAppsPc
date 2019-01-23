@@ -6,24 +6,33 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
+import javafx.stage.StageStyle;
 import uncoupledglovedatathings.MyColors;
 import uncoupledprograms.pconly.IReactTestScreen;
 import uncoupledprograms.pconly.ReactionTestFunction;
 
 import javax.sound.sampled.*;
+import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-
+import javafx.stage.Stage;
 
 public class ReactionTestController implements Initializable, IReactTestScreen {
     @FXML
@@ -32,6 +41,8 @@ public class ReactionTestController implements Initializable, IReactTestScreen {
     public CheckBox multicolor;
     @FXML
     JFXTextField mintimeTxt, maxtimeTxt, colorCountTxt;
+    @FXML
+    VBox container;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -47,15 +58,21 @@ public class ReactionTestController implements Initializable, IReactTestScreen {
     }
 
 
+
+
     @FXML
     public void start(ActionEvent event) {
+
+
         BluetoothConnection.BluetoothStatus btStatus = BluetoothConnection.getBluetoothStatus();
-        System.out.println(multicolor.isSelected());
+
+
 
         if (btStatus.isConnected() && !ReactionTestFunction.getInstance().isRunning()) {
             try {
                 ReactionTestFunction.getInstance().start(this, multicolor.isSelected(),
-                        Integer.parseInt(mintimeTxt.getText()), Integer.parseInt(maxtimeTxt.getText()), Integer.parseInt(colorCountTxt.getText()));
+                        Integer.parseInt(mintimeTxt.getText()), Integer.parseInt(maxtimeTxt.getText()),
+                        Integer.parseInt(colorCountTxt.getText()));
             } catch (IllegalArgumentException e) {
                 Alert alert = new Alert(
                         Alert.AlertType.WARNING

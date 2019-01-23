@@ -10,18 +10,27 @@ import info.monitorenter.util.Range;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.CheckBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import uncoupledglovedatathings.GloveSensors;
+import uncoupledprograms.DataSaveCsv;
 
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class ChartsScreenController implements Initializable, IPostAppendScreen {
+
+    @FXML
+    CheckBox cbGyro, cbAcc;
+
+
 
 
     public VBox accGraphsVboxX,accGraphsVboxY,accGraphsVboxZ;
@@ -79,6 +88,29 @@ public class ChartsScreenController implements Initializable, IPostAppendScreen 
     private ITrace2D TraceAccZ5 = new Trace2DLtd(500);
     private ITrace2D TraceAccZ6 = new Trace2DLtd(500);
 
+    private void gyroAction(ActionEvent actionEvent) {
+        if(cbGyro.isSelected()){
+
+            DataSaveCsv.getInstance().turnOnAutoSavingGyro();
+
+        }else{
+            DataSaveCsv.getInstance().turnOffAutoSavingGyro();
+
+
+        }
+
+    }
+
+    private void accAction(ActionEvent actionEvent) {
+
+        if(cbAcc.isSelected()){
+            DataSaveCsv.getInstance().turnOnAutoSavingAcc();
+        }else{
+            DataSaveCsv.getInstance().turnOffAutoSavingAcc();
+        }
+    }
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -88,8 +120,11 @@ public class ChartsScreenController implements Initializable, IPostAppendScreen 
         setupLabels();
         setupScale();
 
+        cbGyro.setSelected(DataSaveCsv.getInstance().isAutoSavingGyro());
+        cbAcc.setSelected(DataSaveCsv.getInstance().isAutoSavingAcc());
 
-
+        cbGyro.setOnAction(this::gyroAction);
+        cbAcc.setOnAction(this::accAction);
 
         SwingNode snChartGyroX = new SwingNode();
         SwingNode snChartGyroY = new SwingNode();
@@ -130,31 +165,58 @@ public class ChartsScreenController implements Initializable, IPostAppendScreen 
             }
         });
     }
+    public void gyroPoint(ActionEvent event) {
+        final GloveSensors glove = GloveSensors.getInstance();
+        ArrayList<Double> arrGyro = new ArrayList<Double>() {{
+            add(glove.getSensor1().getGx().lastElement());
+            add(glove.getSensor1().getGy().lastElement());
+            add(glove.getSensor1().getGz().lastElement());
+            add(glove.getSensor2().getGx().lastElement());
+            add(glove.getSensor2().getGy().lastElement());
+            add(glove.getSensor2().getGz().lastElement());
+            add(glove.getSensor3().getGx().lastElement());
+            add(glove.getSensor3().getGy().lastElement());
+            add(glove.getSensor3().getGz().lastElement());
+            add(glove.getSensor4().getGx().lastElement());
+            add(glove.getSensor4().getGy().lastElement());
+            add(glove.getSensor4().getGz().lastElement());
+            add(glove.getSensor5().getGx().lastElement());
+            add(glove.getSensor5().getGy().lastElement());
+            add(glove.getSensor5().getGz().lastElement());
+            add(glove.getSensor6().getGx().lastElement());
+            add(glove.getSensor6().getGy().lastElement());
+            add(glove.getSensor6().getGz().lastElement());
 
-    public void start(ActionEvent event) {
-        //updateThread.start();
+        }};
+       DataSaveCsv.getInstance().saveOneLine(arrGyro,"PontosGyroSelecionados.csv");
 
-//        BluetoothConnection.BluetoothStatus btStatus = BluetoothConnection.getBluetoothStatus();
-//        if (btStatus.isConnected()) {
-//            virtualHandContolFunction.start();
-//            status.setText("Running");
-//        } else {
-//            showBluetoothDisconnectedAlert();
-//        }
     }
+    public void accPoint(ActionEvent event) {
+        final GloveSensors glove = GloveSensors.getInstance();
+        ArrayList<Double> arrAcc = new ArrayList<Double>() {{
+            add(glove.getSensor1().getAx().lastElement());
+            add(glove.getSensor1().getAy().lastElement());
+            add(glove.getSensor1().getAz().lastElement());
+            add(glove.getSensor2().getAx().lastElement());
+            add(glove.getSensor2().getAy().lastElement());
+            add(glove.getSensor2().getAz().lastElement());
+            add(glove.getSensor3().getAx().lastElement());
+            add(glove.getSensor3().getAy().lastElement());
+            add(glove.getSensor3().getAz().lastElement());
+            add(glove.getSensor4().getAx().lastElement());
+            add(glove.getSensor4().getAy().lastElement());
+            add(glove.getSensor4().getAz().lastElement());
+            add(glove.getSensor5().getAx().lastElement());
+            add(glove.getSensor5().getAy().lastElement());
+            add(glove.getSensor5().getAz().lastElement());
+            add(glove.getSensor6().getAx().lastElement());
+            add(glove.getSensor6().getAy().lastElement());
+            add(glove.getSensor6().getAz().lastElement());
 
-    public void stop(ActionEvent event) {
-        //updateThread.interrupt();
-//        BluetoothConnection.BluetoothStatus btStatus = BluetoothConnection.getBluetoothStatus();
-//        if (btStatus.isConnected()) {
-//            virtualHandContolFunction.stop();
-//            status.setText("Not Running");
-//        } else {
-//            showBluetoothDisconnectedAlert();
-//        }
+        }};
+        DataSaveCsv.getInstance().saveOneLine(arrAcc, "PontosAccSelecionados.csv");
 
     }
-
     private void showBluetoothDisconnectedAlert() {
         Alert closeConfirmation = new Alert(
                 Alert.AlertType.WARNING,

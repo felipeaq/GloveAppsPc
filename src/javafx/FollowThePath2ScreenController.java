@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
@@ -36,6 +37,10 @@ public class FollowThePath2ScreenController implements Initializable, IPathScree
     public Label score;
     private BufferedImage bufferedImage;
 
+    @FXML
+    private Slider fps,pixelsJumped;
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         PreferenceUtils preferenceUtils = new PreferenceUtils();
@@ -55,10 +60,13 @@ public class FollowThePath2ScreenController implements Initializable, IPathScree
 
     @FXML
     public void start(ActionEvent event) {
+
+
         if (BluetoothConnection.getBluetoothStatus().isConnected()) {
             PathObjectMoveFunction.getInstance().start(this, 800, 510);
             status.setText("Running");
-            PathScene.getInstance().start(this, new PreferenceUtils().getLastUsedPathImage());
+            PathScene.getInstance().start(this, new PreferenceUtils().getLastUsedPathImage(),(int)fps.getValue(),
+                    (int)pixelsJumped.getValue());
         } else {
             showBluetoothDisconnectedAlert();
         }

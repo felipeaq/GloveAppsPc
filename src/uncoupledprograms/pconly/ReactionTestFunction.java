@@ -1,14 +1,31 @@
 package uncoupledprograms.pconly;
 
 import javafx.concurrent.Task;
+import javafx.geometry.Insets;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import uncoupledglovedatathings.GloveSensors;
 import uncoupledglovedatathings.MyColors;
 import uncoupledglovedatathings.Triplet;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class ReactionTestFunction {
+
+
 
 
     private MyColors[] colors = new MyColors[6];
@@ -16,6 +33,74 @@ public class ReactionTestFunction {
     private Thread runningMeasureThread=null;
     private static ReactionTestFunction ME = null;
 
+    private Canvas canvas;
+    private Stage stage;
+    private Scene scene;
+    private Circle circle;
+
+    public void changeColor(MyColors myColors) {
+        javafx.scene.paint.Color color;
+        switch (myColors) {
+            case BLUE:
+                color = new javafx.scene.paint.Color(0, 0, 1, 0.8);
+                break;
+            case RED:
+                color = new javafx.scene.paint.Color(1, 0, 0, 0.8);
+                break;
+            case PINK:
+                color = new javafx.scene.paint.Color(1, 0, 1, 0.8);
+                break;
+            case GREEN:
+                color = new javafx.scene.paint.Color(0, 1, 0, 0.8);
+                break;
+            case PURPLE:
+                color = new javafx.scene.paint.Color(0.5, 0, 0.5, 0.8);
+                break;
+            case YELLOW:
+                color = new javafx.scene.paint.Color(1, 1, 0, 0.8);
+                break;
+            case TRANSPARENT:
+            default:
+                color = new Color(1, 1, 1, 0);
+
+
+        }
+
+        circle.setFill(color);
+    }
+
+
+
+    public void fullScreen() {
+
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+
+
+        //AnchorPane root = new AnchorPane();
+        Group root = new Group();
+
+
+
+        canvas = new Canvas(Screen.getPrimary().getVisualBounds().getWidth(), Screen.getPrimary().getVisualBounds().getHeight());
+        root.getChildren().add(canvas);
+        circle = new Circle(Screen.getPrimary().getVisualBounds().getWidth()/2, Screen.getPrimary().getVisualBounds().getHeight()/2, 200);
+
+        root.getChildren().add(circle);
+
+
+        // canvas.getGraphicsContext2D().drawImage(image, 0, 0);
+
+        canvas.setLayoutX(1000);
+        canvas.toFront();
+
+
+        stage = new Stage();
+        scene = new Scene(root, gd.getDisplayMode().getWidth(), gd.getDisplayMode().getHeight());
+        stage.setFullScreen(true);
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.setScene(scene);
+        stage.show();
+    }
     public static ReactionTestFunction getInstance() {
         if (ME == null)
             ME = new ReactionTestFunction();
@@ -107,6 +192,7 @@ public class ReactionTestFunction {
     private void mesasure_event(boolean isMulticolor, int minTime, int maxTime, int numberOfColors) {
 
         reactTestScreen.showReadyMessage("Move the indicator when\n the red color appears");
+        fullScreen();
         Task<Void> sleeper = null;
         sleeper = new Task<Void>() {
             @Override
@@ -131,6 +217,7 @@ public class ReactionTestFunction {
                     int reactColorShown = 0;
                     int maxReactColorShown = 3;
 
+
                     if (isMulticolor) {
                         int absRandGenerated = absRand(numberOfColors);
                         while (reactColorShown < maxReactColorShown && !Thread.currentThread().isInterrupted()) {
@@ -144,7 +231,7 @@ public class ReactionTestFunction {
                             else
                                 absRandGenerated = auxRand;
 
-                            reactTestScreen.changeColor(colors[absRandGenerated]);
+                            changeColor(colors[absRandGenerated]);
                             System.out.println("tipo ->" + absRandGenerated);
                             report.setSecond(report.getSecond() + 1);
 
@@ -166,6 +253,8 @@ public class ReactionTestFunction {
                                         report.getThird().add(System.nanoTime() - startTime);
                                         reactTestScreen.showSucessAlert();
                                         System.out.println("positives>>>>>" + reactColorShown);
+
+
                                     }
                                 }
                                 Thread.sleep(1);
@@ -178,7 +267,7 @@ public class ReactionTestFunction {
                         if (Thread.currentThread().isInterrupted())
                             return null;
                     } else {
-                        reactTestScreen.changeColor(colors[0]);
+                        changeColor(colors[0]);
                         long start_time = System.nanoTime();
                         while (movent < 1.5) {
                             movent = getMovement();
@@ -192,16 +281,19 @@ public class ReactionTestFunction {
             }
         };
         measureTime.setOnSucceeded(event -> {
-            reactTestScreen.changeColor(MyColors.RED);
+            changeColor(MyColors.RED);
             if (measureTime.getValue() == null) {
-                reactTestScreen.changeColor(MyColors.TRANSPARENT);
+                this.changeColor(MyColors.TRANSPARENT);
+
                 reactTestScreen.showNotRunningMessage();
             } else if (!isMulticolor) {
 
                 long error = measureTime.getValue().getThird().get(0);
                 reactTestScreen.showResult((int) (error / 1E6));
+                stage.close();
 
             } else {
+                stage.close();
                 System.out.println("Total de erros " + measureTime.getValue().getFirst());
                 System.out.println("Total de tentativas " + measureTime.getValue().getSecond());
                 for (int i = 0; i < measureTime.getValue().getThird().size(); i++) {
@@ -214,7 +306,7 @@ public class ReactionTestFunction {
         });
 
         sleeper.setOnSucceeded(event -> {
-            reactTestScreen.changeColor(MyColors.RED);
+            changeColor(MyColors.RED);
             System.out.println("aaa");
             runningMeasureThread=new Thread(measureTime);
             runningMeasureThread.start();

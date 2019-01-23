@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
 <?import com.jfoenix.controls.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
@@ -13,23 +14,24 @@
 
 <VBox prefHeight="1000.0" prefWidth="1000" style="-fx-background-color: #dcdcdc;" stylesheets="@css/css.css" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.ChartsScreenController">
    <children>
-      <HBox prefHeight="400.0" prefWidth="1000.0">
+      <HBox prefHeight="400.0" prefWidth="1400.0">
          <children>
-            <VBox fx:id="accGraphsVboxZ" prefHeight="400.0" prefWidth="330.0" />
-            <VBox fx:id="accGraphsVboxX" alignment="CENTER" prefHeight="200.0" prefWidth="330.0" />
-            <VBox fx:id="accGraphsVboxY" prefHeight="200.0" prefWidth="330.0" />
+            <VBox fx:id="accGraphsVboxZ" prefHeight="400.0" prefWidth="460.0" />
+            <VBox fx:id="accGraphsVboxX" alignment="CENTER" prefHeight="200.0" prefWidth="460.0" />
+            <VBox fx:id="accGraphsVboxY" prefHeight="200.0" prefWidth="460.0" />
          </children>
       </HBox>
-      <HBox prefHeight="400.0" prefWidth="1000.0">
+      <HBox prefHeight="400.0" prefWidth="1400.0">
          <children>
-            <VBox fx:id="gyroGraphsVboxZ" prefHeight="200.0" prefWidth="330.0" />
-            <VBox fx:id="gyroGraphsVboxY" prefHeight="200.0" prefWidth="330.0" />
-            <VBox fx:id="gyroGraphsVboxX" prefHeight="200.0" prefWidth="330.0" />
+            <VBox fx:id="gyroGraphsVboxZ" prefHeight="200.0" prefWidth="460.0" />
+            <VBox fx:id="gyroGraphsVboxY" prefHeight="200.0" prefWidth="460.0" />
+            <VBox fx:id="gyroGraphsVboxX" prefHeight="200.0" prefWidth="460.0" />
          </children>
       </HBox>
        <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefWidth="1000.0" VBox.vgrow="NEVER">
           <children>
-              <JFXButton mnemonicParsing="false" onAction="#start" prefHeight="55.0" prefWidth="150.0" styleClass="keyboard-left-buttons" text="Start">
+            <CheckBox fx:id="cbAcc" mnemonicParsing="false" text="Save Accelerometer" />
+              <JFXButton mnemonicParsing="false" onAction="#gyroPoint" prefHeight="55.0" prefWidth="216.0" styleClass="keyboard-left-buttons" text="Save Gyro Point">
                   <font>
                       <Font size="20.0" />
                   </font>
@@ -37,7 +39,7 @@
                       <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
                   </HBox.margin>
               </JFXButton>
-              <JFXButton layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#stop" prefHeight="55.0" prefWidth="150.0" styleClass="keyboard-left-buttons" text="Stop">
+              <JFXButton layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#accPoint" prefHeight="55.0" prefWidth="209.0" styleClass="keyboard-left-buttons" text="Save Acc Point">
                   <font>
                       <Font size="20.0" />
                   </font>
@@ -45,6 +47,7 @@
                       <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
                   </HBox.margin>
               </JFXButton>
+            <CheckBox fx:id="cbGyro" mnemonicParsing="false" text="Save Gyroscope" />
           </children>
        </HBox>
    </children>

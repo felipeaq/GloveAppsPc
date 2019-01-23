@@ -53,7 +53,8 @@ public class PathScene {
     private static PathScene ME;
     private int miss;
     private int hit;
-
+    private int pixelsJumped = 3;
+    private int delayTime=10;
 
     private PathScene(){
     }
@@ -64,7 +65,9 @@ public class PathScene {
         return ME;
     }
 
-    public void start(FollowThePath2ScreenController caller, String pathImage) {
+    public void start(FollowThePath2ScreenController caller, String pathImage,int fps,int pixelsJumped) {
+        delayTime= (int)(1/(double)fps*1000);
+        this.pixelsJumped=pixelsJumped;
         if (isRunning)
             return;
         isRunning = true;
@@ -151,7 +154,7 @@ public class PathScene {
             }
 
 
-            int pixelsJumped = 3;
+
 
 
 
@@ -171,10 +174,10 @@ public class PathScene {
                 try {
                     //double time =System.currentTimeMillis();
 
-                    if(im.getImage().getPixelReader().getColor((int)b.getX(), (int)b.getY()).equals(Color.BLACK)){
-                        hit++;
-                    }else{
+                    if(im.getImage().getPixelReader().getColor((int)b.getX(), (int)b.getY()).equals(Color.WHITE)){
                         miss++;
+                    }else{
+                        hit++;
                     }
 
                     //System.out.println((b.getX()+" "+ b.getY()+" "+(System.currentTimeMillis()-time)));
@@ -223,7 +226,7 @@ public class PathScene {
 
                 });
                 try {
-                    Thread.sleep(10 * pixelsJumped);
+                    Thread.sleep(delayTime);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
