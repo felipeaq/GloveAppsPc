@@ -1,5 +1,7 @@
 package uncoupledglovedatathings;
 
+import java.util.ArrayList;
+
 public class GloveSensors {
     private SensorData sensor1;
     private SensorData sensor2;
@@ -7,6 +9,8 @@ public class GloveSensors {
     private SensorData sensor4;
     private SensorData sensor5;
     private SensorData sensor6;
+    private ArrayList<SensorData> sensors;
+    private ArrayList<SensorData> sensorsFingers;
     private static GloveSensors ME;
 
     public static final double TO_RAD = 10430.3783505;
@@ -27,6 +31,21 @@ public class GloveSensors {
         setSensor4(new SensorData());
         setSensor5(new SensorData());
         setSensor6(new SensorData());
+
+        sensors=new ArrayList<SensorData>(){{add(sensor1);
+            add(sensor2);
+            add(sensor3);
+            add(sensor4);
+            add(sensor5);
+            add(sensor6);
+        }};
+
+        sensorsFingers=new ArrayList<SensorData>(){{add(sensor1);
+            add(sensor2);
+            add(sensor3);
+            add(sensor5);
+            add(sensor6);
+        }};
     }
 
     public void appendDataWithToRadAndResist(double sensor1GX, double sensor1GY, double sensor1GZ,
@@ -87,7 +106,12 @@ public class GloveSensors {
 
     }
 
-
+    public SensorData getFingerAt(int index) {
+        return sensorsFingers.get(index);
+    }
+    public SensorData getSensorAt(int index) {
+        return sensors.get(index);
+    }
     public SensorData getSensor1() {
         return sensor1;
     }

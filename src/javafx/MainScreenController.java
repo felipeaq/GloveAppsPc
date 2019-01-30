@@ -125,11 +125,8 @@ public class MainScreenController implements Initializable, IBlutoothInfoScreen 
 
     }
 
-    public void futureAppsBtnAction(ActionEvent event) {
-        //System.out.println("future");
-        //loadScreen("fxml/OtherApps.fxml", event);
-        Stage st= (Stage)container.getScene().getWindow();
-        st.setFullScreen(true);
+    public void  fingerChooseModeBtnAction(ActionEvent event) {
+        loadScreen("fxml/FingerChooseScreen.fxml", event);;
 
     }
 

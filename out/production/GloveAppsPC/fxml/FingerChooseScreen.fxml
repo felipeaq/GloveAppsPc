@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="1000.0" prefWidth="1000" style="-fx-background-color: #dcdcdc;" stylesheets="@css/css.css" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.FingerChooseScreenController">
+   <children>
+      <HBox alignment="CENTER" prefHeight="44.0" prefWidth="1000.0">
+         <children>
+            <Label text="movements:" />
+            <Slider fx:id="mov" blockIncrement="1.0" majorTickUnit="1.0" max="20.0" min="1.0" minorTickCount="0" prefHeight="16.0" prefWidth="556.0" showTickLabels="true" showTickMarks="true" value="5.0" />
+         </children>
+      </HBox>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+         <children>
+            <Label fx:id="status" layoutX="457.0" layoutY="462.0" text="Finger Choose App">
+               <font>
+                  <Font size="38.0" />
+               </font>
+            </Label>
+         </children></VBox>
+       <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefWidth="1000.0" VBox.vgrow="NEVER">
+          <children>
+              <JFXButton mnemonicParsing="false" onAction="#start" prefHeight="55.0" prefWidth="150.0" styleClass="keyboard-left-buttons" text="Start">
+                  <font>
+                      <Font size="20.0" />
+                  </font>
+                  <HBox.margin>
+                      <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                  </HBox.margin>
+              </JFXButton>
+              <JFXButton layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#stop" prefHeight="55.0" prefWidth="150.0" styleClass="keyboard-left-buttons" text="Stop">
+                  <font>
+                      <Font size="20.0" />
+                  </font>
+                  <HBox.margin>
+                      <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                  </HBox.margin>
+              </JFXButton>
+          </children>
+       </HBox>
+   </children>
+</VBox>
